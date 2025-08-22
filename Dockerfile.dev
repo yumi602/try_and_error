@@ -1,0 +1,23 @@
+FROM ruby:3.2.2-bookworm
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+  build-essential libpq-dev curl git ca-certificates pkg-config \
+  libvips \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+  && apt-get install -y nodejs \
+  && corepack enable \
+  && corepack prepare yarn@stable --activate
+
+WORKDIR /app
+
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile || true
+
+COPY . .
+
+# ENTRYPOINT/CMDなしで終わり！

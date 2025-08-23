@@ -1,3 +1,3 @@
-# try-and-error
+# code-diary
 技術検証用のリポジトリです。
 Railsを中心に、技術を自由に試せる場です。

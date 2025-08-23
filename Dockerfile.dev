@@ -1,4 +1,4 @@
-FROM ruby:3.2.2-bookworm
+FROM ruby:3.2.3
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
   build-essential libpq-dev curl git ca-certificates pkg-config \
@@ -12,11 +12,11 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 
 WORKDIR /app
 
-COPY Gemfile Gemfile.lock ./
-RUN bundle install
+# COPY Gemfile Gemfile.lock ./
+RUN gem install bundler
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile || true
+# COPY package.json yarn.lock ./
+# RUN yarn install --frozen-lockfile || true
 
 COPY . .
 

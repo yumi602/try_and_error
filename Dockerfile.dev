@@ -1,23 +1,17 @@
-FROM ruby:3.2.3
-
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-  build-essential libpq-dev curl git ca-certificates pkg-config \
-  libvips \
-  && rm -rf /var/lib/apt/lists/*
-
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-  && apt-get install -y nodejs \
-  && corepack enable \
-  && corepack prepare yarn@stable --activate
-
+FROM ruby:3.3
 WORKDIR /app
 
-# COPY Gemfile Gemfile.lock ./
-RUN gem install bundler
+# 基本パッケージ
+RUN apt-get update -qq && apt-get install -y curl gnupg postgresql-client
 
-# COPY package.json yarn.lock ./
-# RUN yarn install --frozen-lockfile || true
+# Node.js v20 + Yarn
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+  && apt-get install -y nodejs \
+  && corepack enable
+
+# Gemfile が無いので、ここはコメントアウト
+# COPY Gemfile Gemfile.lock ./
+# RUN bundle install
 
 COPY . .
-
-# ENTRYPOINT/CMDなしで終わり！
+CMD ["bash"]
